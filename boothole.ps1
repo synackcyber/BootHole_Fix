@@ -1,7 +1,9 @@
-# This script is for the x64 architecture. The code must be updated to support 32-bit or ARM devices.
-# 
+# By running this script you are agreeing to the origional authors README.md found here: https://github.com/synackcyber/BootHole_Fix
 #
-
+# **This script is for the x64 architecture. The code must be updated to support 32-bit or ARM devices.**
+#
+# https://support.microsoft.com/en-us/topic/microsoft-guidance-for-applying-secure-boot-dbx-update-e3b9e4cb-a330-b3ba-a602-15083965d9ca
+#
 # Check if computer contains invalid CA. Stop Script if certificate is not found.
 $SystemImpact = [System.Text.Encoding]::ASCII.GetString((Get-SecureBootUEFI db).bytes) -match 'Microsoft Corporation UEFI CA 2011'
 
@@ -15,13 +17,18 @@ else{
 }
 
 # Set Execution Policy to Bypass.
-Set-ExecutionPolicy -ExecutionPolicy Bypass -Force
+Set-ExecutionPolicy Bypass -scope CurrentUser -Force
+Write-Host "Changing Execution policy to allow script to run"
+Start-Sleep -s 5
 Write-host "Execution policy is set to BYPASS"
 
 # Check OS Architecture to ensure x64. 
 $os_type = (Get-WmiObject -Class Win32_ComputerSystem).SystemType -match ‘(x64)’
 if ($os_type -eq "True") {
-    Write-Host "I ARE 64bit"
+    Write-Host "Checking system to confirm 64bit"
+    Start-Sleep -s 5
+    Write-Host "I ARE 64bit? True/False"
+    Start-Sleep -s 2
     write-host $os_type }
     else {
         "This PC is not 64Bit..Stopping Script"
@@ -54,8 +61,3 @@ Set-SecureBootUefi -Name dbx -ContentFilePath .\content.bin -SignedFilePath .\si
 # Change execution policy to Restricted, Remove NuGet Package, and delete temp directory used to execute cmdlets.
 cd "C:\"
 rmdir -Path $UEFIDLdirectory -Recurse
-
-(Get-PackageProvider|where-object{$_.name -eq "nuget"}).ProviderPath|Remove-Item -force
-
-Set-ExecutionPolicy -ExecutionPolicy Restricted -Force
-Write-host "Execution policy is set to RESTRICTED"
