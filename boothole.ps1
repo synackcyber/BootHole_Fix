@@ -61,3 +61,5 @@ Set-SecureBootUefi -Name dbx -ContentFilePath .\content.bin -SignedFilePath .\si
 # Change execution policy to Restricted, Remove NuGet Package, and delete temp directory used to execute cmdlets.
 cd "C:\"
 rmdir -Path $UEFIDLdirectory -Recurse
+
+Write-Host "Please reboot your system for changes to apply"
